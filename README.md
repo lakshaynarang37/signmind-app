@@ -23,79 +23,31 @@ SignMind is built around everyday realities many DHH users describe:
 
 The goal is not to replace therapy. The goal is to lower friction for daily support and reflection.
 
-## Tech Stack
+## How To Use SignMind
 
-- Frontend: React + Vite
-- Styling/UI: Utility-first classes with reusable UI components
-- Local API: Express server at server/index.js
-- Edge API option: Cloudflare Worker at server/worker.js
-- Local data store: server/db.json
-- Cloud data store: Cloudflare KV (worker path)
+1. Create an account and sign in.
+2. Start with a quick check-in in Support Chat.
+3. Use Visual Therapy when you feel overwhelmed or anxious.
+4. Write a short Sign Journal entry and log your mood.
+5. Revisit Insights to notice patterns over time.
 
-## Project Structure
+## Main Spaces In The App
 
-- src/components: Feature screens and shared UI
-- src/services: Frontend API client
-- server/index.js: Local Express backend
-- server/worker.js: Cloudflare Worker backend
-- docs: Product and UI design docs
+- Overview: daily check-in, quick actions, and mood summary
+- Sign Journal: private writing space with mood labels and tags
+- Support Chat: text-first emotional support and coping ideas
+- Insights: patterns from your recent mood logs
+- Community: shared experiences and supportive peer posts
+- Research Hub: curated mental health and accessibility references
 
-## Getting Started
+## Privacy
 
-Run these commands from the project root.
+- Journal entries and mood logs are private to your account.
+- SignMind is built to support reflection and wellness, not public sharing of personal notes.
 
-1. Install dependencies
+## Crisis Help
 
-```bash
-npm install
-```
-
-2. Start frontend
-
-```bash
-npm run dev
-```
-
-3. Start backend (optional but recommended for full features)
-
-```bash
-npm run dev:api
-```
-
-Default local URLs:
-
-- Frontend: http://localhost:5173
-- API: http://localhost:8787
-
-## Environment and Secrets
-
-Set your Groq key before using chat endpoints.
-
-PowerShell example:
-
-```powershell
-$env:GROQ_API_KEY="your_key_here"
-```
-
-Important:
-
-- Never commit API keys to the repository
-- Use Cloudflare secrets or your deployment platform secret manager in production
-
-## Available Scripts
-
-- npm run dev: Start Vite dev server
-- npm run dev:api: Start local Express API
-- npm run build: Create production frontend build
-- npm run preview: Preview production build locally
-- npm run lint: Run lint checks
-- npm run deploy: Deploy frontend build to Cloudflare Pages
-
-## Deployment Notes
-
-- This repository supports both local server and worker-based deployment paths
-- For Cloudflare Worker deployment, configure KV binding and secrets in wrangler config
-- Review crisis support links periodically to keep contact details current
+If you feel unsafe or in immediate danger, use the in-app Crisis Support button right away and contact local emergency services.
 
 ## Responsible Use
 
