@@ -154,12 +154,10 @@ app.post("/api/auth/signup", async (req, res) => {
   const db = await loadDb();
   const existingUser = db.users.find((u) => u.email === normalizedEmail);
   if (existingUser) {
-    return res
-      .status(409)
-      .json({
-        error: "Account with this email already exists",
-        code: "ACCOUNT_EXISTS",
-      });
+    return res.status(409).json({
+      error: "Account with this email already exists",
+      code: "ACCOUNT_EXISTS",
+    });
   }
   const user = {
     id: crypto.randomUUID(),
@@ -194,12 +192,10 @@ app.post("/api/auth/login", async (req, res) => {
   const db = await loadDb();
   const user = db.users.find((u) => u.email === normalizedEmail);
   if (!user)
-    return res
-      .status(404)
-      .json({
-        error: "No account found with this email",
-        code: "ACCOUNT_NOT_FOUND",
-      });
+    return res.status(404).json({
+      error: "No account found with this email",
+      code: "ACCOUNT_NOT_FOUND",
+    });
   if (user.passwordHash !== hashPassword(String(password))) {
     return res
       .status(401)
