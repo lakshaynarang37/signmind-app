@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, HandMetal, Loader2, Mail, Lock, User, ArrowRight, Sparkles } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  HandMetal,
+  Loader2,
+  Mail,
+  Lock,
+  User,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -55,18 +65,30 @@ const AuthScreen = ({ onAuthSuccess }) => {
               height: Math.random() * 4 + 1,
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              background: ["hsl(252 85% 68%/0.5)", "hsl(174 72% 47%/0.5)", "hsl(38 92% 50%/0.4)"][i % 3],
+              background: [
+                "hsl(252 85% 68%/0.5)",
+                "hsl(174 72% 47%/0.5)",
+                "hsl(38 92% 50%/0.4)",
+              ][i % 3],
             }}
             animate={{ y: [0, -20, 0], opacity: [0.3, 0.8, 0.3] }}
-            transition={{ duration: 3 + Math.random() * 4, repeat: Infinity, delay: Math.random() * 3 }}
+            transition={{
+              duration: 3 + Math.random() * 4,
+              repeat: Infinity,
+              delay: Math.random() * 3,
+            }}
           />
         ))}
 
         {/* Grid lines */}
-        <div className="absolute inset-0" style={{
-          backgroundImage: "linear-gradient(hsl(var(--border)/0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)/0.3) 1px, transparent 1px)",
-          backgroundSize: "48px 48px"
-        }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(hsl(var(--border)/0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)/0.3) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
 
         {/* Logo mark */}
         <motion.div
@@ -78,17 +100,40 @@ const AuthScreen = ({ onAuthSuccess }) => {
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 flex items-center justify-center mb-8 shadow-2xl glow-violet animate-pulse-glow">
             <HandMetal size={36} className="text-white" />
           </div>
-          <h1 className="font-display text-5xl font-bold gradient-text mb-4">SignMind</h1>
+          <h1 className="font-display text-5xl font-bold gradient-text mb-4">
+            SignMind
+          </h1>
           <p className="text-lg text-muted-foreground max-w-sm leading-relaxed">
-            Mental wellness reimagined for the <span className="text-foreground font-medium">Deaf & Hard-of-Hearing</span> community. Visual-first. AI-powered. Always accessible.
+            Mental wellness built with the{" "}
+            <span className="text-foreground font-medium">
+              Deaf & Hard-of-Hearing
+            </span>{" "}
+            community in mind. Visual-first tools, respectful support, and
+            privacy by default.
           </p>
 
           <div className="mt-12 grid grid-cols-2 gap-4 w-full max-w-sm">
             {[
-              { icon: "🧠", label: "AI Psychologist", desc: "DHH-trained companion" },
-              { icon: "🌬️", label: "Visual Therapy", desc: "100% audio-free modules" },
-              { icon: "📓", label: "Sign Journal", desc: "Express & track moods" },
-              { icon: "🤝", label: "DHH Community", desc: "Peer connection & support" },
+              {
+                icon: "🧠",
+                label: "Support Chat",
+                desc: "A calm place to check in",
+              },
+              {
+                icon: "🌬️",
+                label: "Visual Therapy",
+                desc: "Silent guided exercises",
+              },
+              {
+                icon: "📓",
+                label: "Sign Journal",
+                desc: "Write and track your days",
+              },
+              {
+                icon: "🤝",
+                label: "DHH Community",
+                desc: "Shared stories and support",
+              },
             ].map((f) => (
               <motion.div
                 key={f.label}
@@ -96,7 +141,9 @@ const AuthScreen = ({ onAuthSuccess }) => {
                 className="rounded-xl border border-border bg-card/50 backdrop-blur-sm p-3 text-left"
               >
                 <div className="text-2xl mb-1">{f.icon}</div>
-                <div className="text-sm font-semibold text-foreground">{f.label}</div>
+                <div className="text-sm font-semibold text-foreground">
+                  {f.label}
+                </div>
                 <div className="text-xs text-muted-foreground">{f.desc}</div>
               </motion.div>
             ))}
@@ -117,21 +164,25 @@ const AuthScreen = ({ onAuthSuccess }) => {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-700 flex items-center justify-center">
               <HandMetal size={18} className="text-white" />
             </div>
-            <span className="font-display text-2xl font-bold gradient-text">SignMind</span>
+            <span className="font-display text-2xl font-bold gradient-text">
+              SignMind
+            </span>
           </div>
 
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles size={16} className="text-violet-400" />
-              <span className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Welcome</span>
+              <span className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
+                Welcome
+              </span>
             </div>
             <h2 className="font-display text-3xl font-bold text-foreground">
               {mode === "login" ? "Sign back in" : "Create account"}
             </h2>
             <p className="text-muted-foreground mt-1 text-sm">
               {mode === "login"
-                ? "Your accessible wellness journey continues here."
-                : "Join thousands of DHH individuals building mental resilience."}
+                ? "Pick up where you left off."
+                : "Create your account and start at your own pace."}
             </p>
           </div>
 
@@ -149,7 +200,10 @@ const AuthScreen = ({ onAuthSuccess }) => {
                     >
                       <Label htmlFor="name">Full Name</Label>
                       <div className="relative">
-                        <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        <User
+                          size={15}
+                          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                        />
                         <Input
                           id="name"
                           placeholder="e.g. Alex Rivera"
@@ -166,7 +220,10 @@ const AuthScreen = ({ onAuthSuccess }) => {
                 <div className="space-y-1.5">
                   <Label htmlFor="email">Email Address</Label>
                   <div className="relative">
-                    <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <Mail
+                      size={15}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                    />
                     <Input
                       id="email"
                       type="email"
@@ -182,7 +239,10 @@ const AuthScreen = ({ onAuthSuccess }) => {
                 <div className="space-y-1.5">
                   <Label htmlFor="password">Password</Label>
                   <div className="relative">
-                    <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <Lock
+                      size={15}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                    />
                     <Input
                       id="password"
                       type={showPass ? "text" : "password"}
@@ -236,9 +296,14 @@ const AuthScreen = ({ onAuthSuccess }) => {
           </Card>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
-            {mode === "login" ? "Don't have an account? " : "Already have an account? "}
+            {mode === "login"
+              ? "Don't have an account? "
+              : "Already have an account? "}
             <button
-              onClick={() => { setMode(m => m === "login" ? "signup" : "login"); setError(""); }}
+              onClick={() => {
+                setMode((m) => (m === "login" ? "signup" : "login"));
+                setError("");
+              }}
               className="text-violet-400 hover:text-violet-300 font-medium transition-colors"
             >
               {mode === "login" ? "Sign up free" : "Sign in"}

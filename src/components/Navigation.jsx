@@ -1,15 +1,24 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  LayoutDashboard, BookOpen, Brain, BarChart3, Users, FlaskConical,
-  Settings, AlertTriangle, HandMetal, LogOut, ChevronRight
+  LayoutDashboard,
+  BookOpen,
+  Brain,
+  BarChart3,
+  Users,
+  FlaskConical,
+  Settings,
+  AlertTriangle,
+  HandMetal,
+  LogOut,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Overview", icon: LayoutDashboard },
   { id: "journal", label: "Journal", icon: BookOpen },
-  { id: "ai-companion", label: "AI Companion", icon: Brain },
+  { id: "ai-companion", label: "Support Chat", icon: Brain },
   { id: "insights", label: "Insights", icon: BarChart3 },
   { id: "community", label: "Community", icon: Users },
   { id: "research", label: "Research", icon: FlaskConical },
@@ -26,7 +35,7 @@ const NavItem = ({ item, active, onClick }) => {
         "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 relative group",
         active
           ? "text-foreground"
-          : "text-muted-foreground hover:text-foreground hover:bg-accent"
+          : "text-muted-foreground hover:text-foreground hover:bg-accent",
       )}
     >
       {/* Active indicator pill */}
@@ -39,32 +48,42 @@ const NavItem = ({ item, active, onClick }) => {
       )}
 
       {/* Icon container */}
-      <div className={cn(
-        "relative z-10 w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200",
-        active
-          ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25"
-          : "text-muted-foreground group-hover:text-foreground"
-      )}>
+      <div
+        className={cn(
+          "relative z-10 w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200",
+          active
+            ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25"
+            : "text-muted-foreground group-hover:text-foreground",
+        )}
+      >
         <Icon size={16} />
       </div>
 
       <span className="relative z-10 flex-1 text-left">{item.label}</span>
 
       {active && (
-        <ChevronRight size={14} className="relative z-10 text-violet-400 opacity-60" />
+        <ChevronRight
+          size={14}
+          className="relative z-10 text-violet-400 opacity-60"
+        />
       )}
 
-      {/* AI badge for AI companion */}
+      {/* Companion badge */}
       {item.id === "ai-companion" && !active && (
         <span className="relative z-10 text-[10px] px-1.5 py-0.5 rounded-full bg-violet-500/15 text-violet-400 border border-violet-500/20 font-semibold">
-          AI
+          Chat
         </span>
       )}
     </motion.button>
   );
 };
 
-const Navigation = ({ activeTab, setActiveTab, onCrisisClick, currentUser }) => {
+const Navigation = ({
+  activeTab,
+  setActiveTab,
+  onCrisisClick,
+  currentUser,
+}) => {
   const initials = (currentUser?.name || "U").slice(0, 2).toUpperCase();
 
   return (
@@ -76,15 +95,21 @@ const Navigation = ({ activeTab, setActiveTab, onCrisisClick, currentUser }) => 
             <HandMetal size={17} className="text-white" />
           </div>
           <div>
-            <span className="font-display text-base font-bold gradient-text">SignMind</span>
-            <p className="text-[10px] text-muted-foreground leading-none mt-0.5">Wellness Platform</p>
+            <span className="font-display text-base font-bold gradient-text">
+              SignMind
+            </span>
+            <p className="text-[10px] text-muted-foreground leading-none mt-0.5">
+              Wellness Platform
+            </p>
           </div>
         </div>
       </div>
 
       {/* Nav items */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        <p className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-widest px-3 mb-2">Navigation</p>
+        <p className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-widest px-3 mb-2">
+          Navigation
+        </p>
         {NAV_ITEMS.map((item) => (
           <NavItem
             key={item.id}
@@ -115,7 +140,9 @@ const Navigation = ({ activeTab, setActiveTab, onCrisisClick, currentUser }) => 
           </div>
           <div className="text-left">
             <div className="text-xs font-semibold">Crisis Support</div>
-            <div className="text-[10px] text-rose-400/60">Silent & text-based help</div>
+            <div className="text-[10px] text-rose-400/60">
+              Silent & text-based help
+            </div>
           </div>
         </button>
       </div>
@@ -127,8 +154,12 @@ const Navigation = ({ activeTab, setActiveTab, onCrisisClick, currentUser }) => 
             {initials}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground truncate">{currentUser?.name || "User"}</p>
-            <p className="text-[10px] text-muted-foreground truncate">{currentUser?.email || ""}</p>
+            <p className="text-sm font-medium text-foreground truncate">
+              {currentUser?.name || "User"}
+            </p>
+            <p className="text-[10px] text-muted-foreground truncate">
+              {currentUser?.email || ""}
+            </p>
           </div>
         </div>
       </div>

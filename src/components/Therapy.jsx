@@ -27,9 +27,9 @@ const MODULES = [
     icon: Wind,
     title: "Color Breathing Sync",
     tag: "5 min · Beginner",
-    desc: "A fully visual breathing exercise using expanding color rings. Evidence-based paced breathing designed to reduce anxiety by activating the parasympathetic nervous system.",
+    desc: "A visual breathing exercise using expanding color rings to help slow breathing and settle anxiety.",
     tooltipDesc:
-      "Shown to reduce acute anxiety in 5–10 minutes. No audio cues — everything is guided by visual motion.",
+      "No audio cues are needed. Everything is guided through simple visual motion.",
     color: "var(--accent-teal)",
     colorDim: "var(--accent-teal-dim)",
     durationSec: 300,
@@ -39,9 +39,9 @@ const MODULES = [
     icon: Eye,
     title: "Grounding Through Shapes",
     tag: "10 min · Intermediate",
-    desc: "Use gaze-focus on morphing geometric patterns to interrupt dissociation and anxiety spirals. Based on the 5-4-3-2-1 grounding technique, adapted visually for DHH users.",
+    desc: "Use moving shapes as a focus point to interrupt spiraling thoughts and come back to the present.",
     tooltipDesc:
-      "An adaptation of the clinical 5-4-3-2-1 grounding method that typically relies on verbal cues, reimagined as a purely visual interaction.",
+      "Inspired by the 5-4-3-2-1 grounding method, adapted into a visual format.",
     color: "var(--brand)",
     colorDim: "var(--brand-dim)",
     durationSec: 600,
@@ -51,9 +51,9 @@ const MODULES = [
     icon: Zap,
     title: "ASL Affirmation Loop",
     tag: "3 min · All levels",
-    desc: "A continuous loop of positive affirmations performed in native ASL by a DHH counselor. No text overlays, no audio track — just meaning in your first language.",
+    desc: "A short loop of positive affirmations in a visual-first format designed for DHH users.",
     tooltipDesc:
-      "Unlike text-based affirmations that require reading English (a second language for many DHH users), this is delivered natively in ASL.",
+      "Made for users who prefer a visual experience over long text or audio-only exercises.",
     color: "var(--accent-violet)",
     colorDim: "var(--accent-violet-dim)",
     durationSec: 180,
@@ -63,9 +63,9 @@ const MODULES = [
     icon: Clock,
     title: "Visual Body Scan",
     tag: "8 min · Beginner",
-    desc: "A guided mindful body scan that uses gentle color halos moving across a body silhouette — fully visual, zero narration. Helps with somatic awareness and grounding.",
+    desc: "A guided body scan with gentle visual cues to help notice tension and return to calm.",
     tooltipDesc:
-      "Traditional body scan meditations rely heavily on audio narration. This reimagines the entire experience as a silent visual journey.",
+      "A silent body-scan option for people who prefer visual guidance over narration.",
     color: "var(--accent-rose)",
     colorDim: "var(--accent-rose-dim)",
     durationSec: 480,
@@ -373,8 +373,7 @@ const Therapy = () => {
                 marginTop: "2px",
               }}
             >
-              100% visual — zero audio. Every module is built from scratch for
-              DHH users, not adapted from hearing-first apps.
+              100% visual and audio-free. Built for DHH users from day one.
             </p>
           </div>
 

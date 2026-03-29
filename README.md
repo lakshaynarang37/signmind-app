@@ -1,16 +1,75 @@
-# React + Vite
+# SignMind
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SignMind is a visual-first mental wellness app built for Deaf and Hard-of-Hearing (DHH) users.
 
-Currently, two official plugins are available:
+The app focuses on everyday support:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- a private journal for mood and reflection
+- visual therapy modules (no audio required)
+- a supportive chat companion
+- mood trends and weekly insights
+- community and research resources
 
-## React Compiler
+The goal is simple: make mental wellness tools easier to use when most apps assume hearing-first experiences.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- Frontend: React + Vite
+- UI: Tailwind-style utility classes + custom components
+- Local backend: Express (`server/index.js`)
+- Edge backend option: Cloudflare Worker (`server/worker.js`)
+- Data: JSON file for local dev, KV for worker mode
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Local Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+cd signmind-app-main
+npm install
+```
+
+2. Run the frontend:
+
+```bash
+cd signmind-app-main
+npm run dev
+```
+
+3. Run the local API (optional, if you need backend features locally):
+
+```bash
+cd signmind-app-main
+npm run dev:api
+```
+
+Frontend usually runs on `http://localhost:5173` and API on `http://localhost:8787`.
+
+## Environment Variables
+
+Do not commit secrets.
+
+Set `GROQ_API_KEY` in your local environment (or Cloudflare secrets) before using chat features.
+
+Example (PowerShell):
+
+```powershell
+$env:GROQ_API_KEY="your_key_here"
+```
+
+## Scripts
+
+From `signmind-app-main/`:
+
+- `npm run dev` - start frontend
+- `npm run build` - production build
+- `npm run preview` - preview built app
+- `npm run lint` - run ESLint
+- `npm run dev:api` - start Express API server
+
+## Notes
+
+- This project includes both local-server and worker-based backend paths.
+- Crisis/support content should be reviewed regularly to keep numbers and links accurate.
+- If you deploy publicly, keep all API keys in secret managers only.
