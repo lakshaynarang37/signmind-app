@@ -2,6 +2,8 @@
 
 SignMind is a visual-first mental wellness app designed for Deaf and Hard-of-Hearing (DHH) users.
 
+Live app: https://signmind-wellness.pages.dev/
+
 Most mental health products are built around audio instructions and hearing-first assumptions. SignMind takes a different approach: clear visual interactions, text-first support, and accessibility choices that respect DHH communication preferences.
 
 ## What This App Includes
@@ -22,6 +24,16 @@ SignMind is built around everyday realities many DHH users describe:
 - hearing-centric design in wellness apps
 
 The goal is not to replace therapy. The goal is to lower friction for daily support and reflection.
+
+## Tech Stack
+
+- Frontend: React + Vite
+- Styling: Utility-first CSS with reusable UI components
+- Animations: Framer Motion
+- Icons: Lucide React
+- Local API: Express (Node.js)
+- Edge API option: Cloudflare Worker (Hono)
+- Data layer: JSON storage in local mode, KV storage in worker mode
 
 ## How To Use SignMind
 
