@@ -1,220 +1,133 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Video, X, ShieldAlert, PhoneOff, MessageSquareText, Clock, User } from 'lucide-react';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Phone, MessageSquare, Video, ShieldAlert, ExternalLink } from "lucide-react";
 
-const CrisisModal = ({ onClose }) => {
-  const [state, setState] = useState('connecting'); // connecting | connected
+const CRISIS_RESOURCES = [
+  {
+    name: "ISLRTC Video Relay (India)",
+    description: "Emergency Indian Sign Language support via WhatsApp Video call.",
+    contact: "8929667579",
+    type: "video",
+    link: "https://wa.me/918929667579",
+    hours: "Mon-Fri (10AM-1PM, 2PM-5PM)"
+  },
+  {
+    name: "iCALL (TISS) Chat",
+    description: "Professional mental health counseling via email and chat for DHH.",
+    contact: "icall@tiss.edu",
+    type: "chat",
+    link: "mailto:icall@tiss.edu",
+    hours: "Mon-Sat (10AM-8PM)"
+  },
+  {
+    name: "Tele-MANAS (Govt of India)",
+    description: "24/7 National mental health helpline. Dial 14416.",
+    contact: "14416",
+    type: "phone",
+    link: "tel:14416",
+    hours: "24/7 Available"
+  },
+  {
+    name: "Crisis Text Line India",
+    description: "Text-based support for emotional distress and suicidal thoughts.",
+    contact: "TEXT 741741",
+    type: "chat",
+    link: "https://www.crisistextline.org/",
+    hours: "24/7 Available"
+  }
+];
 
-  useEffect(() => {
-    const t = setTimeout(() => setState('connected'), 3000);
-    return () => clearTimeout(t);
-  }, []);
+export default function CrisisModal({ isOpen, onClose }) {
+  if (!isOpen) return null;
 
   return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 100,
-      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px'
-    }}>
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        className="absolute inset-0 bg-background/80 backdrop-blur-md"
         onClick={onClose}
-        style={{
-          position: 'absolute', inset: 0,
-          background: 'rgba(4, 5, 10, 0.92)',
-          backdropFilter: 'blur(20px)'
-        }}
       />
 
       <motion.div
-        initial={{ scale: 0.92, opacity: 0, y: 20 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.92, opacity: 0, y: 20 }}
-        transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-        style={{
-          position: 'relative',
-          width: '100%', maxWidth: '980px',
-          height: '82vh',
-          background: 'var(--bg-secondary)',
-          border: '1px solid rgba(244, 63, 94, 0.25)',
-          borderRadius: 'var(--radius-xl)',
-          display: 'flex', flexDirection: 'column',
-          overflow: 'hidden',
-          boxShadow: '0 0 60px rgba(244, 63, 94, 0.08)'
-        }}
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="relative w-full max-w-lg glass-strong rounded-3xl overflow-hidden shadow-2xl border border-rose-500/20"
       >
         {/* Header */}
-        <div style={{
-          padding: '16px 24px',
-          background: 'rgba(244, 63, 94, 0.05)',
-          borderBottom: '1px solid rgba(244, 63, 94, 0.15)',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div className="pulse-red" style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--danger)' }} />
-              <h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <ShieldAlert size={18} /> Silent Crisis Connect
-              </h2>
+        <div className="p-6 border-b border-border bg-rose-500/5">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3 text-rose-400">
+              <ShieldAlert className="w-6 h-6" />
+              <h2 className="text-xl font-display font-bold">Silent Crisis Support</h2>
             </div>
-
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: '6px',
-              padding: '4px 10px', borderRadius: 'var(--radius-full)',
-              background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)'
-            }}>
-              <PhoneOff size={12} color="var(--text-muted)" />
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Video Only · No Calls</span>
-            </div>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-full hover:bg-rose-500/10 text-muted-foreground hover:text-rose-400 transition-colors"
+            >
+              <X size={20} />
+            </button>
           </div>
-
-          <button onClick={onClose} style={{
-            width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-card)',
-            border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', color: 'var(--text-secondary)'
-          }}>
-            <X size={16} />
-          </button>
+          <p className="text-sm text-muted-foreground">
+            If you are in immediate danger or need urgent help, these resources provide text and sign-language based assistance in India.
+          </p>
         </div>
 
-        {/* Content */}
-        <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
-          <AnimatePresence mode="wait">
-            {state === 'connecting' && (
-              <motion.div
-                key="connecting"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}
-              >
-                <div style={{ position: 'relative' }}>
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                    style={{
-                      width: '60px', height: '60px',
-                      border: '3px solid transparent',
-                      borderTop: '3px solid var(--danger)',
-                      borderRadius: '50%'
-                    }}
-                  />
-                  <div style={{
-                    position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}>
-                    <User size={22} color="var(--danger)" />
+        {/* Resources Scroll Area */}
+        <div className="p-4 sm:p-6 space-y-4 max-h-[60vh] overflow-y-auto">
+          {CRISIS_RESOURCES.map((resource, i) => (
+            <div
+              key={i}
+              className="p-4 rounded-2xl bg-secondary/50 border border-border hover:border-rose-500/30 transition-all group"
+            >
+              <div className="flex items-start justify-between gap-4 mb-2">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-background border border-border text-rose-400">
+                    {resource.type === "video" ? <Video size={18} /> : resource.type === "chat" ? <MessageSquare size={18} /> : <Phone size={18} />}
                   </div>
-                </div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 700, letterSpacing: '-0.03em' }}>Finding an ASL Counselor...</h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textAlign: 'center', maxWidth: '360px', lineHeight: 1.6 }}>
-                  You are not alone. We are connecting you with a trained Deaf counselor who understands. Please hold on.
-                </p>
-                <div style={{ display: 'flex', gap: '20px', marginTop: '8px' }}>
-                  {['✓ No voice call ever', '✓ ASL-fluent counselor', '✓ 100% confidential'].map(f => (
-                    <span key={f} style={{ fontSize: '0.78rem', color: 'var(--accent-emerald)', background: 'var(--accent-emerald-dim)', padding: '4px 10px', borderRadius: 'var(--radius-full)' }}>
-                      {f}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {state === 'connected' && (
-              <motion.div
-                key="connected"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                style={{ flex: 1, display: 'flex', overflow: 'hidden' }}
-              >
-                {/* Counselor main feed */}
-                <div style={{ flex: 2, position: 'relative', background: '#03040a' }}>
-                  <div style={{
-                    position: 'absolute', inset: 0,
-                    background: 'url("https://images.unsplash.com/photo-1551836022-4c4c79ecde51?q=80&w=2000")',
-                    backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.7
-                  }} />
-
-                  {/* Counselor label */}
-                  <div style={{
-                    position: 'absolute', bottom: '24px', left: '24px',
-                    background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(12px)',
-                    padding: '12px 18px', borderRadius: 'var(--radius-md)',
-                    display: 'flex', alignItems: 'center', gap: '12px',
-                    border: '1px solid rgba(255,255,255,0.08)'
-                  }}>
-                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--success)', flexShrink: 0 }} />
-                    <div>
-                      <p style={{ fontWeight: 600, fontSize: '1rem' }}>Sarah M., LCSW</p>
-                      <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>ASL Fluent · Crisis Counselor · Deaf Ally</p>
-                    </div>
-                  </div>
-
-                  {/* Timer */}
-                  <div style={{
-                    position: 'absolute', top: '20px', right: '20px',
-                    background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)',
-                    padding: '6px 12px', borderRadius: 'var(--radius-full)',
-                    display: 'flex', alignItems: 'center', gap: '6px'
-                  }}>
-                    <Clock size={12} color="var(--text-secondary)" />
-                    <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>00:12</span>
-                  </div>
-                </div>
-
-                {/* Right panel */}
-                <div style={{ width: '300px', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'column', background: 'var(--bg-secondary)' }}>
-                  {/* Self view */}
-                  <div style={{ height: '38%', position: 'relative', background: '#0a0c14', borderBottom: '1px solid var(--border)' }}>
-                    <div style={{
-                      position: 'absolute', inset: 0,
-                      background: 'url("https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2000")',
-                      backgroundSize: 'cover', backgroundPosition: 'center',
-                      transform: 'scaleX(-1)', opacity: 0.65
-                    }} />
-                    <div style={{
-                      position: 'absolute', top: '10px', left: '10px',
-                      background: 'rgba(0,0,0,0.5)', padding: '3px 8px', borderRadius: 'var(--radius-full)',
-                      fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '4px'
-                    }}>
-                      <Video size={11} color="var(--brand)" /> You
-                    </div>
-                  </div>
-
-                  {/* Text fallback */}
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '16px' }}>
-                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <MessageSquareText size={12} /> Text backup (optional)
+                  <div>
+                    <h3 className="font-bold text-foreground group-hover:text-rose-400 transition-colors uppercase text-xs tracking-wider">
+                      {resource.name}
+                    </h3>
+                    <p className="text-[10px] text-rose-400/80 font-medium">
+                      {resource.hours}
                     </p>
-
-                    <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '8px' }}>
-                      <div style={{
-                        alignSelf: 'flex-start', background: 'var(--bg-card)',
-                        padding: '10px 14px', borderRadius: '0 12px 12px 12px',
-                        border: '1px solid var(--border)', maxWidth: '90%'
-                      }}>
-                        <p style={{ fontSize: '0.82rem', lineHeight: 1.5 }}>Hello, I'm here with you. Take all the time you need. You can sign or type below — I understand both.</p>
-                        <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>Sarah · 10:42 AM</span>
-                      </div>
-                    </div>
-
-                    <input
-                      type="text"
-                      placeholder="Type if you prefer..."
-                      style={{
-                        width: '100%', padding: '10px 14px',
-                        background: 'var(--bg-card)', border: '1px solid var(--border)',
-                        borderRadius: 'var(--radius-md)', color: 'var(--text-primary)',
-                        outline: 'none', fontSize: '0.85rem', fontFamily: 'Inter, sans-serif'
-                      }}
-                    />
                   </div>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                <a
+                  href={resource.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-rose-500 text-white hover:bg-rose-600 transition-colors shadow-lg shadow-rose-500/20"
+                >
+                  <ExternalLink size={16} />
+                </a>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {resource.description}
+              </p>
+              <div className="mt-3 flex items-center gap-2 text-xs font-mono text-foreground font-bold bg-background/50 px-3 py-1.5 rounded-lg border border-border w-fit">
+                {resource.contact}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="p-6 bg-secondary/30 text-center">
+          <p className="text-xs text-muted-foreground">
+            Remember: Your life is valuable. Reach out to someone you trust or use these professional services.
+          </p>
+          <button
+            onClick={onClose}
+            className="mt-4 px-6 py-2 rounded-xl bg-background border border-border text-sm font-medium hover:bg-accent transition-colors"
+          >
+            I understand, close this modal
+          </button>
         </div>
       </motion.div>
     </div>
   );
-};
-
-export default CrisisModal;
+}

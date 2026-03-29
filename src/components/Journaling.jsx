@@ -1,243 +1,154 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Video, MicOff, Play, Square, ChevronRight, Sparkles, Clock, BookOpen, Smile } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { BookOpen, Send, Loader2, Trash2, Smile, Calendar, Tag, Sparkles } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
+import { Badge } from "./ui/badge";
+import { getJournalEntries, saveJournalEntry, deleteJournalEntry, getJournalPrompt } from "../services/backendApi";
 
-const Journaling = () => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [elapsed, setElapsed] = useState(0);
-  const [timer, setTimer] = useState(null);
-  const [showPrompt, setShowPrompt] = useState(true);
+const MOOD_LABELS = ["", "Awful", "Very Bad", "Bad", "Rough", "Neutral", "Okay", "Good", "Great", "Wonderful", "Amazing"];
+const MOOD_COLORS = ["", "#ef4444", "#f97316", "#eab308", "#84cc16", "#22c55e", "#10b981", "#14b8a6", "#6366f1", "#8b5cf6", "#a855f7"];
+const TAGS = ["anxious", "hopeful", "lonely", "connected", "stressed", "calm", "confused", "grateful", "tired", "energized"];
 
-  const toggleRecording = () => {
-    if (!isRecording) {
-      setIsRecording(true);
-      const t = setInterval(() => setElapsed(s => s + 1), 1000);
-      setTimer(t);
-    } else {
-      setIsRecording(false);
-      clearInterval(timer);
-      setTimer(null);
-      setElapsed(0);
-    }
+const Journaling = ({ token }) => {
+  const [entries, setEntries] = useState([]);
+  const [text, setText] = useState("");
+  const [mood, setMood] = useState(6);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [saving, setSaving] = useState(false);
+  const [loadingEntries, setLoadingEntries] = useState(true);
+  const [prompt, setPrompt] = useState("");
+  const [deleting, setDeleting] = useState(null);
+
+  useEffect(() => {
+    Promise.all([
+      getJournalEntries(token).then((d) => setEntries(d.entries || [])).catch(() => {}),
+      getJournalPrompt().then((d) => setPrompt(d.prompt || "")).catch(() => {}),
+    ]).finally(() => setLoadingEntries(false));
+  }, [token]);
+
+  const toggleTag = (tag) => setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag].slice(0, 5));
+
+  const handleSave = async () => {
+    if (!text.trim()) return;
+    setSaving(true);
+    try {
+      const { entry } = await saveJournalEntry(token, { text, mood, moodLabel: MOOD_LABELS[mood], tags: selectedTags });
+      setEntries((prev) => [entry, ...prev]);
+      setText("");
+      setMood(6);
+      setSelectedTags([]);
+    } catch { }
+    setSaving(false);
   };
 
-  const fmtTime = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
-
-  const pastEntries = [
-    { date: 'Yesterday, 8:14 PM', duration: '03:42', mood: 'Stressed', moodClr: 'var(--accent-amber)', tags: ['Work', 'Anxiety'] },
-    { date: 'Monday, Oct 13', duration: '05:15', mood: 'Calm', moodClr: 'var(--accent-emerald)', tags: ['Rest', 'Relaxed'] },
-    { date: 'Sunday, Oct 12', duration: '02:30', mood: 'Anxious', moodClr: 'var(--accent-rose)', tags: ['Social', 'Uncertain'] },
-  ];
-
-  const prompts = [
-    'What moment from today made you feel the most connected?',
-    'Describe a challenge you faced and how you navigated it.',
-    'What is one thing you want to release before the week ends?',
-  ];
+  const handleDelete = async (id) => {
+    setDeleting(id);
+    try {
+      await deleteJournalEntry(token, id);
+      setEntries((prev) => prev.filter((e) => e.id !== id));
+    } catch { }
+    setDeleting(null);
+  };
 
   return (
-    <div style={{ display: 'flex', gap: '20px', height: 'calc(100vh - var(--header-h) - 56px)', maxWidth: '1200px' }}>
-      {/* Main recorder */}
-      <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '16px' }}>
-
-        {/* Info bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 700, letterSpacing: '-0.03em' }}>Sign Language Journal</h2>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-              Express freely in ASL — your AI companion watches for emotion patterns
-            </p>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', borderRadius: 'var(--radius-full)', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)' }}>
-            <MicOff size={13} color="var(--accent-emerald)" />
-            <span style={{ fontSize: '0.78rem', color: 'var(--accent-emerald)', fontWeight: 500 }}>Audio Disabled · Privacy First</span>
-          </div>
-        </div>
-
-        {/* Camera View */}
-        <div style={{
-          flex: 1,
-          borderRadius: 'var(--radius-xl)',
-          position: 'relative',
-          overflow: 'hidden',
-          background: '#080a14',
-          border: isRecording ? '1.5px solid rgba(244,63,94,0.4)' : '1px solid var(--border)',
-          boxShadow: isRecording ? 'var(--shadow-danger)' : 'none',
-          transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
-          minHeight: '340px'
-        }}>
-          {/* Simulated camera */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'url("https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2000")',
-            backgroundSize: 'cover', backgroundPosition: 'center',
-            opacity: 0.55, filter: 'grayscale(0.15)'
-          }} />
-
-          {/* Recording badge */}
-          {isRecording && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              style={{
-                position: 'absolute', top: '18px', left: '18px',
-                background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
-                padding: '6px 14px', borderRadius: 'var(--radius-full)',
-                display: 'flex', alignItems: 'center', gap: '8px',
-                border: '1px solid rgba(244,63,94,0.3)'
-              }}
-            >
-              <motion.div
-                animate={{ opacity: [1, 0.2, 1] }}
-                transition={{ repeat: Infinity, duration: 1.2 }}
-                style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--danger)' }}
-              />
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--danger)' }}>REC {fmtTime(elapsed)}</span>
-            </motion.div>
-          )}
-
-          {/* AI Feature overlays */}
-          {isRecording && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
-              style={{
-                position: 'absolute', top: '18px', right: '18px',
-                background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
-                padding: '12px 16px', borderRadius: 'var(--radius-md)',
-                border: '1px solid rgba(0,212,170,0.2)', width: '200px'
-              }}>
-              <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '6px', fontWeight: 500 }}>AI Expression Tracking</p>
-              {[
-                { label: 'Tension', pct: 62, clr: 'var(--accent-amber)' },
-                { label: 'Calm', pct: 30, clr: 'var(--accent-teal)' },
-                { label: 'Sadness', pct: 18, clr: 'var(--brand)' },
-              ].map((e, i) => (
-                <div key={i} style={{ marginBottom: '6px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-secondary)', marginBottom: '3px' }}>
-                    <span>{e.label}</span><span>{e.pct}%</span>
-                  </div>
-                  <div style={{ height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px' }}>
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${e.pct}%` }} transition={{ delay: 1.2, duration: 0.8 }}
-                      style={{ height: '100%', background: e.clr, borderRadius: '2px' }} />
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          )}
-
-          {/* Sign language zone indicator */}
-          {isRecording && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0.4, 0.8, 0.4] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              style={{
-                position: 'absolute',
-                left: '50%', top: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '160px', height: '200px',
-                border: '1.5px dashed rgba(91,141,238,0.5)',
-                borderRadius: '80px / 100px',
-                pointerEvents: 'none'
-              }}
-            />
-          )}
-
-          {/* Controls */}
-          <div style={{
-            position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
-            display: 'flex', alignItems: 'center', gap: '20px',
-            background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(12px)',
-            padding: '12px 28px', borderRadius: 'var(--radius-full)',
-            border: '1px solid rgba(255,255,255,0.08)'
-          }}>
-            <button
-              onClick={toggleRecording}
-              style={{
-                width: '56px', height: '56px', borderRadius: '50%',
-                background: isRecording ? 'rgba(244,63,94,0.15)' : 'var(--danger)',
-                border: isRecording ? '2px solid var(--danger)' : 'none',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', transition: 'all 0.2s ease',
-                boxShadow: isRecording ? 'none' : 'var(--shadow-danger)'
-              }}
-            >
-              {isRecording
-                ? <Square size={20} fill="var(--danger)" color="var(--danger)" />
-                : <span style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#fff', display: 'block' }} />
-              }
-            </button>
-          </div>
-        </div>
-
-        {/* AI Prompt Suggestion */}
-        <AnimatePresence>
-          {showPrompt && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              style={{
-                background: 'var(--brand-dim)', border: '1px solid var(--border-brand)',
-                borderRadius: 'var(--radius-md)', padding: '14px 18px',
-                display: 'flex', alignItems: 'center', gap: '12px'
-              }}
-            >
-              <Sparkles size={18} color="var(--brand)" style={{ flexShrink: 0 }} />
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', flex: 1, lineHeight: 1.5 }}>
-                <strong style={{ color: 'var(--text-primary)' }}>AI Prompt: </strong>
-                "{prompts[0]}"
-              </p>
-              <button onClick={() => setShowPrompt(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}>×</button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+    <div className="space-y-5 max-w-2xl">
+      <div>
+        <h2 className="font-display text-2xl font-bold mb-1">Sign Journal</h2>
+        <p className="text-muted-foreground text-sm">Express your feelings in writing. Your entries are private and securely stored.</p>
       </div>
 
-      {/* Sidebar */}
-      <div style={{ width: '280px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Feature tags */}
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '18px' }}>
-          <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '12px' }}>Features Active</h3>
-          {[
-            { icon: <Smile size={14} />, label: 'Facial Expression AI', color: 'var(--brand)' },
-            { icon: <BookOpen size={14} />, label: 'Auto-mood Tagging', color: 'var(--accent-violet)' },
-            { icon: <Clock size={14} />, label: 'Session Timestamps', color: 'var(--accent-teal)' },
-          ].map((f, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 0', borderBottom: i < 2 ? '1px solid var(--border)' : 'none' }}>
-              <div style={{ color: f.color }}>{f.icon}</div>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{f.label}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Past entries */}
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '18px', flex: 1 }}>
-          <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '14px' }}>Past Journals</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {pastEntries.map((entry, i) => (
-              <div key={i} style={{
-                padding: '12px', borderRadius: 'var(--radius-md)',
-                background: 'var(--bg-surface)', border: '1px solid var(--border)',
-                cursor: 'pointer', transition: 'border-color 0.2s'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{entry.date}</span>
-                  <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
-                    <Play size={14} />
-                  </button>
-                </div>
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                  <span className="badge" style={{ background: `${entry.moodClr}15`, color: entry.moodClr }}>
-                    {entry.mood}
-                  </span>
-                  <span className="badge" style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)' }}>
-                    {entry.duration}
-                  </span>
-                </div>
-              </div>
-            ))}
+      {/* Write Entry Card */}
+      <Card className="border-border/50">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base flex items-center gap-2"><BookOpen size={16} className="text-violet-400" /> New Entry</CardTitle>
+            {prompt && (
+              <button onClick={() => setText(prompt)} className="text-xs text-muted-foreground hover:text-violet-400 transition-colors flex items-center gap-1">
+                <Sparkles size={11} /> Use prompt
+              </button>
+            )}
           </div>
-        </div>
+          {prompt && <p className="text-xs text-muted-foreground/70 italic mt-1">"{prompt}"</p>}
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Textarea
+            placeholder="How are you feeling? What happened today? What do you want to remember?"
+            className="min-h-[120px]"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+
+          {/* Mood Slider */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-medium text-muted-foreground flex items-center gap-1"><Smile size={12} /> Mood Level</label>
+              <span className="text-xs font-semibold" style={{ color: MOOD_COLORS[mood] }}>{MOOD_LABELS[mood]} ({mood}/10)</span>
+            </div>
+            <input type="range" min={1} max={10} value={mood} onChange={(e) => setMood(Number(e.target.value))}
+              className="w-full h-2 rounded-full appearance-none cursor-pointer"
+              style={{ background: `linear-gradient(to right, ${MOOD_COLORS[mood]} 0%, ${MOOD_COLORS[mood]} ${mood * 10}%, hsl(var(--muted)) ${mood * 10}%, hsl(var(--muted)) 100%)` }} />
+          </div>
+
+          {/* Tags */}
+          <div>
+            <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1"><Tag size={12} /> Feeling tags (optional)</p>
+            <div className="flex flex-wrap gap-1.5">
+              {TAGS.map((tag) => (
+                <button key={tag} onClick={() => toggleTag(tag)}
+                  className={`text-xs px-2.5 py-1 rounded-full border transition-all duration-150 ${selectedTags.includes(tag) ? "border-violet-500/50 bg-violet-500/15 text-violet-400" : "border-border text-muted-foreground hover:border-border hover:text-foreground"}`}>
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <Button variant="brand" className="w-full" onClick={handleSave} disabled={saving || !text.trim()}>
+            {saving ? <Loader2 size={15} className="animate-spin" /> : <><Send size={15} /> Save Entry</>}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Past Entries */}
+      <div>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2"><Calendar size={13} /> Past Entries ({entries.length})</h3>
+        {loadingEntries ? (
+          <div className="space-y-3">
+            {[1, 2].map((i) => <div key={i} className="h-24 rounded-xl shimmer-bg" />)}
+          </div>
+        ) : entries.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            <BookOpen size={32} className="mx-auto mb-3 opacity-30" />
+            <p className="text-sm">Your journal is empty. Write your first entry above.</p>
+          </div>
+        ) : (
+          <AnimatePresence>
+            {entries.map((entry) => (
+              <motion.div key={entry.id} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -20 }} className="mb-3">
+                <Card className="border-border/50">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ color: MOOD_COLORS[entry.mood], background: `${MOOD_COLORS[entry.mood]}15` }}>
+                          {MOOD_LABELS[entry.mood] || "Neutral"} · {entry.mood}/10
+                        </span>
+                        {entry.tags?.map((t) => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span className="text-[10px] text-muted-foreground">{new Date(entry.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+                        <button onClick={() => handleDelete(entry.id)} disabled={deleting === entry.id} className="text-muted-foreground hover:text-destructive transition-colors">
+                          {deleting === entry.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3">{entry.text}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        )}
       </div>
     </div>
   );

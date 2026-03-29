@@ -1,0 +1,152 @@
+{
+  "users": [
+    {
+      "id": "44fffdfd-7a4e-47a4-80bd-7f9ea93dcb05",
+      "name": "Demo User",
+      "email": "demo.72e0cfd8-2ef5-465a-9994-1e6b639b6289@mail.com",
+      "passwordHash": "bd94dcda26fccb4e68d6a31f9b5aac0b571ae266d822620e901ef7ebe3a11d4f",
+      "createdAt": "2026-03-27T16:14:48.422Z"
+    },
+    {
+      "id": "8d65fa23-7cc8-4ffe-8c2a-79fc42f73273",
+      "name": "Demo Login",
+      "email": "demo.login.bcffb013-6f32-446a-bada-ac1220c39f7d@mail.com",
+      "passwordHash": "bd94dcda26fccb4e68d6a31f9b5aac0b571ae266d822620e901ef7ebe3a11d4f",
+      "createdAt": "2026-03-27T16:14:48.828Z"
+    },
+    {
+      "id": "2cdb23d6-06ad-4494-b134-dadaf42a71d7",
+      "name": "Proxy User",
+      "email": "proxy.bdaa5445-7244-435e-adf7-d986db695de6@mail.com",
+      "passwordHash": "bd94dcda26fccb4e68d6a31f9b5aac0b571ae266d822620e901ef7ebe3a11d4f",
+      "createdAt": "2026-03-27T16:15:44.287Z"
+    },
+    {
+      "id": "223a66d1-f6d8-44d1-89f4-5a078705a5bb",
+      "name": "l",
+      "email": "lakshaynarang65@gmail.com",
+      "passwordHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "createdAt": "2026-03-27T16:16:36.539Z"
+    },
+    {
+      "id": "2326ed95-4d28-44e3-9cf2-3c4bae969e1f",
+      "name": "Verify User",
+      "email": "verify.e3a06f4b-fded-4ffd-bed8-6d2bf8ba63b1@mail.com",
+      "passwordHash": "bd94dcda26fccb4e68d6a31f9b5aac0b571ae266d822620e901ef7ebe3a11d4f",
+      "createdAt": "2026-03-27T16:28:00.040Z"
+    },
+    {
+      "id": "2088cc56-41d3-4ac2-9392-6db4fff6265c",
+      "name": "Verify User",
+      "email": "verify.b1c736b4-55a2-4bff-a9e1-36063ab75a28@mail.com",
+      "passwordHash": "bd94dcda26fccb4e68d6a31f9b5aac0b571ae266d822620e901ef7ebe3a11d4f",
+      "createdAt": "2026-03-27T16:28:56.890Z"
+    },
+    {
+      "id": "067b801f-6ad7-4a71-9202-876bb96e91e5",
+      "name": "Verify User",
+      "email": "verify.fbedcd48-702f-43b6-9f8d-7d55e1a9012d@mail.com",
+      "passwordHash": "bd94dcda26fccb4e68d6a31f9b5aac0b571ae266d822620e901ef7ebe3a11d4f",
+      "createdAt": "2026-03-27T16:30:22.883Z"
+    },
+    {
+      "id": "2888a5d3-d380-4210-968f-b085b1eb4f4b",
+      "name": "lak",
+      "email": "lakshaynaranng65@gmail.com",
+      "passwordHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "createdAt": "2026-03-28T06:25:10.059Z"
+    },
+    {
+      "id": "3ee367d9-59af-456c-b1e3-66bb0b488d70",
+      "name": "Test User",
+      "email": "test@signmind.com",
+      "passwordHash": "85777f270ad7cf2a790981bbae3c4e484a1dc55e24a77390d692fbf1cffa12fa",
+      "createdAt": "2026-03-28T06:31:15.875Z"
+    }
+  ],
+  "settingsByUserId": {
+    "44fffdfd-7a4e-47a4-80bd-7f9ea93dcb05": {
+      "theme": "calm-earth",
+      "language": "en",
+      "notifications": true,
+      "privacyMode": true,
+      "updatedAt": "2026-03-27T16:14:48.422Z"
+    },
+    "8d65fa23-7cc8-4ffe-8c2a-79fc42f73273": {
+      "theme": "soft-glass",
+      "language": "en",
+      "notifications": true,
+      "privacyMode": false,
+      "updatedAt": "2026-03-27T16:14:48.838Z"
+    },
+    "2cdb23d6-06ad-4494-b134-dadaf42a71d7": {
+      "theme": "high-contrast",
+      "language": "en",
+      "notifications": true,
+      "privacyMode": true,
+      "updatedAt": "2026-03-27T16:15:44.300Z"
+    },
+    "223a66d1-f6d8-44d1-89f4-5a078705a5bb": {
+      "theme": "soft-glass",
+      "language": "en",
+      "notifications": true,
+      "privacyMode": true,
+      "updatedAt": "2026-03-27T16:38:43.715Z"
+    },
+    "2326ed95-4d28-44e3-9cf2-3c4bae969e1f": {
+      "theme": "calm-earth",
+      "language": "en",
+      "notifications": true,
+      "privacyMode": true,
+      "updatedAt": "2026-03-27T16:28:00.041Z"
+    },
+    "2088cc56-41d3-4ac2-9392-6db4fff6265c": {
+      "theme": "calm-earth",
+      "language": "en",
+      "notifications": true,
+      "privacyMode": true,
+      "updatedAt": "2026-03-27T16:28:56.890Z"
+    },
+    "067b801f-6ad7-4a71-9202-876bb96e91e5": {
+      "theme": "calm-earth",
+      "language": "en",
+      "notifications": true,
+      "privacyMode": true,
+      "updatedAt": "2026-03-27T16:30:22.883Z"
+    },
+    "2888a5d3-d380-4210-968f-b085b1eb4f4b": {
+      "theme": "sunset",
+      "language": "en",
+      "notifications": true,
+      "privacyMode": true,
+      "updatedAt": "2026-03-28T06:25:31.436Z"
+    },
+    "3ee367d9-59af-456c-b1e3-66bb0b488d70": {
+      "theme": "dark",
+      "language": "en",
+      "notifications": true,
+      "privacyMode": true,
+      "updatedAt": "2026-03-28T06:31:15.875Z"
+    }
+  },
+  "journalsByUserId": {
+    "2888a5d3-d380-4210-968f-b085b1eb4f4b": [],
+    "3ee367d9-59af-456c-b1e3-66bb0b488d70": [
+      {
+        "id": "7360f46f-b307-47ca-ae43-311d2f52722a",
+        "text": "The new AI companion feature seems really promising for the DHH community.",
+        "mood": 7,
+        "moodLabel": "Good",
+        "tags": [
+          "hopeful",
+          "connected"
+        ],
+        "createdAt": "2026-03-28T06:32:18.972Z"
+      }
+    ]
+  },
+  "moodsByUserId": {
+    "2888a5d3-d380-4210-968f-b085b1eb4f4b": [],
+    "3ee367d9-59af-456c-b1e3-66bb0b488d70": []
+  }
+}

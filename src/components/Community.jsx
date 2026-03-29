@@ -1,178 +1,149 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Users, MessageSquare, BookOpen, Heart, Pin, Shield, ThumbsUp, ChevronRight, Globe } from 'lucide-react';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Users, Heart, MessageSquare, BookMarked, Globe, Shield, Award, ExternalLink } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.07, duration: 0.38, ease: [0.25, 0.46, 0.45, 0.94] } })
+const POSTS = [
+  { id: 1, author: "Maya R.", initials: "MR", color: "from-violet-500 to-indigo-600", time: "2h ago", content: "Just completed my first week using the color breathing exercise every morning. The visual approach is exactly what I needed — no more feeling left out of audio-based meditation apps! 🌊", likes: 24, tags: ["breathing", "milestone"], category: "milestone" },
+  { id: 2, author: "Jordan K.", initials: "JK", color: "from-teal-500 to-cyan-600", time: "5h ago", content: "Navigating a new job with hearing coworkers is exhausting. Communication fatigue is real. Has anyone found good strategies for setting boundaries about communication methods politely?", likes: 31, tags: ["work", "communication"], category: "question" },
+  { id: 3, author: "Sam T.", initials: "ST", color: "from-amber-500 to-orange-600", time: "1d ago", content: "PSA: The National Deaf Center (nationaldeafcenter.org) has incredible mental health resources. They have licensed therapists who are DHH-affirming. It took me 2 years to find this. Sharing so you don't have to search as long.", likes: 87, tags: ["resources", "therapy"], category: "resource" },
+  { id: 4, author: "Riley C.", initials: "RC", color: "from-rose-500 to-pink-600", time: "1d ago", content: "Reminder that communication fatigue is a legitimate mental health challenge. If you're hard of hearing and constantly 'switching on' extra concentration to lip-read or process audio — that's real labor. Be gentle with yourself today. ❤️", likes: 112, tags: ["self-care", "validation"], category: "support" },
+  { id: 5, author: "Alex B.", initials: "AB", color: "from-emerald-500 to-teal-600", time: "2d ago", content: "Question for the community: Do you prefer to disclose your hearing loss at the start of new relationships/friendships, or wait until it becomes relevant? How has it gone for you?", likes: 45, tags: ["identity", "relationships"], category: "question" },
+];
+
+const RESOURCES = [
+  { name: "National Deaf Center", desc: "Mental health, education, and career resources for DHH adults", url: "https://nationaldeafcenter.org", category: "Mental Health" },
+  { name: "Hands & Voices", desc: "Family support organization for families with DHH children", url: "https://www.handsandvoices.org", category: "Family" },
+  { name: "NAMI DHH Resources", desc: "Mental health resources adapted for Deaf communities", url: "https://nami.org", category: "Mental Health" },
+  { name: "DeafMental Health", desc: "Culturally-affirmative therapy and crisis support", url: "https://www.deafmh.org", category: "Crisis" },
+  { name: "Crisis Text Line (text HOME)", desc: "Free 24/7 crisis support via text — DHH accessible", url: "https://www.crisistextline.org", category: "Crisis" },
+];
+
+const CATEGORIES = ["all", "milestone", "question", "resource", "support"];
+
+const Post = ({ post }) => {
+  const [liked, setLiked] = useState(false);
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -1 }}>
+      <Card className="border-border/50 hover:border-border transition-colors duration-200">
+        <CardContent className="p-5">
+          <div className="flex items-start gap-3 mb-3">
+            <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${post.color} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>{post.initials}</div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-foreground">{post.author}</p>
+                <span className="text-[10px] text-muted-foreground">{post.time}</span>
+              </div>
+              <div className="flex gap-1 mt-0.5">
+                {post.tags.map((t) => <Badge key={t} variant="secondary" className="text-[9px] px-1.5 py-0">{t}</Badge>)}
+              </div>
+            </div>
+          </div>
+          <p className="text-sm text-foreground/80 leading-relaxed mb-3">{post.content}</p>
+          <div className="flex items-center gap-3 text-muted-foreground">
+            <button onClick={() => setLiked((l) => !l)} className={`flex items-center gap-1.5 text-xs hover:text-rose-400 transition-colors ${liked ? "text-rose-400" : ""}`}>
+              <Heart size={13} fill={liked ? "currentColor" : "none"} /> {post.likes + (liked ? 1 : 0)}
+            </button>
+            <button className="flex items-center gap-1.5 text-xs hover:text-violet-400 transition-colors">
+              <MessageSquare size={13} /> Reply
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
 };
 
 const Community = () => {
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [activeTab, setActiveTabLocal] = useState("feed");
 
-  const posts = [
-    {
-      author: 'Maya R.', avatar: 'MR', role: 'DHH Member',
-      time: '2h ago', tag: 'Story', tagColor: 'var(--brand)',
-      title: 'How SignMind helped me get through a panic attack without calling anyone',
-      body: "Last Tuesday I felt it coming — the spiral. I opened the Color Breathing exercise and focused on the rings instead of reaching for my phone. It passed. First time in years I managed it without involving a hearing person who couldn't fully understand anyway.",
-      likes: 47, comments: 12, pinned: true
-    },
-    {
-      author: 'James T.', avatar: 'JT', role: 'Hard of Hearing',
-      time: '5h ago', tag: 'Question', tagColor: 'var(--accent-violet)',
-      title: 'Does the AI pick up on BSL (British Sign Language) or only ASL?',
-      body: 'I live in the UK and was wondering if the facial expression AI is language-agnostic since it tracks facial movements, or if it is calibrated only for ASL signers. Has anyone tested this?',
-      likes: 23, comments: 8, pinned: false
-    },
-    {
-      author: 'Priya N.', avatar: 'PN', role: 'Deaf Community Leader',
-      time: '1d ago', tag: 'Resource', tagColor: 'var(--accent-teal)',
-      title: '5 research-backed techniques for managing DHH-specific social anxiety',
-      body: "I've compiled a visual-first guide based on the latest DHH mental health research (post-2020). None of these require you to call a hotline or use voice chat. Sharing here with permission from the researchers.",
-      likes: 134, comments: 29, pinned: false
-    },
-  ];
-
-  const resources = [
-    { icon: BookOpen, label: 'DHH Mental Health Research Hub', color: 'var(--brand)', desc: 'Peer-reviewed papers, 2018–present' },
-    { icon: Globe, label: 'Find a DHH Therapist Near You', color: 'var(--accent-teal)', desc: 'Directory of ASL-fluent clinicians' },
-    { icon: Shield, label: 'Legal Rights for DHH Patients', color: 'var(--accent-amber)', desc: 'Know your ADA and accessibility rights' },
-  ];
+  const filtered = activeCategory === "all" ? POSTS : POSTS.filter((p) => p.category === activeCategory);
 
   return (
-    <div style={{ display: 'flex', gap: '20px', maxWidth: '1100px' }}>
-      {/* Feed */}
-      <div style={{ flex: 1.5, display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 700, letterSpacing: '-0.03em' }}>DHH Community</h2>
-            <span className="badge" style={{ background: 'var(--accent-emerald-dim)', color: 'var(--accent-emerald)', border: '1px solid var(--accent-emerald-glow)' }}>
-              <Shield size={10} /> Moderated
-            </span>
+    <div className="space-y-5">
+      <div>
+        <h2 className="font-display text-2xl font-bold mb-1">DHH Community</h2>
+        <p className="text-muted-foreground text-sm">A safe space for Deaf and Hard-of-Hearing individuals to connect, share, and support each other.</p>
+      </div>
+
+      {/* Community stats */}
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { label: "Members", value: "2.4K", icon: Users, color: "text-violet-400", bg: "bg-violet-500/10" },
+          { label: "Posts Today", value: "38", icon: MessageSquare, color: "text-teal-400", bg: "bg-teal-500/10" },
+          { label: "Resources", value: "120+", icon: BookMarked, color: "text-amber-400", bg: "bg-amber-500/10" },
+        ].map((s, i) => (
+          <Card key={i} className="border-border/50">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className={`p-2 rounded-lg ${s.bg}`}><s.icon size={14} className={s.color} /></div>
+              <div><p className={`text-lg font-display font-bold ${s.color} leading-tight`}>{s.value}</p><p className="text-[10px] text-muted-foreground">{s.label}</p></div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 border-b border-border pb-1">
+        {["feed", "resources"].map((t) => (
+          <button key={t} onClick={() => setActiveTabLocal(t)}
+            className={`text-sm font-medium px-3 py-1.5 rounded-lg capitalize transition-all duration-200 ${activeTab === t ? "bg-violet-500/15 text-violet-400 border border-violet-500/25" : "text-muted-foreground hover:text-foreground"}`}>
+            {t}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === "feed" ? (
+        <>
+          {/* Category filters */}
+          <div className="flex gap-2 flex-wrap">
+            {CATEGORIES.map((cat) => (
+              <button key={cat} onClick={() => setActiveCategory(cat)}
+                className={`text-xs px-3 py-1.5 rounded-full border capitalize transition-all duration-150 ${activeCategory === cat ? "border-violet-500/50 bg-violet-500/15 text-violet-400" : "border-border text-muted-foreground hover:text-foreground"}`}>
+                {cat}
+              </button>
+            ))}
           </div>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-            A private space for Deaf and Hard-of-Hearing people. No hearing-centric advice, no audio links, no phone numbers.
-          </p>
-        </div>
 
-        {/* Filter tabs */}
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-          {['all', 'stories', 'questions', 'resources', 'research'].map(f => (
-            <button key={f} onClick={() => setActiveFilter(f)} style={{
-              padding: '6px 14px', borderRadius: 'var(--radius-full)', border: '1px solid var(--border)',
-              background: activeFilter === f ? 'var(--brand)' : 'transparent',
-              color: activeFilter === f ? '#fff' : 'var(--text-secondary)',
-              cursor: 'pointer', fontSize: '0.8rem', fontWeight: 500, transition: 'all 0.15s'
-            }}>
-              {f.charAt(0).toUpperCase() + f.slice(1)}
-            </button>
-          ))}
-        </div>
+          {/* Posts */}
+          <div className="space-y-3">
+            {filtered.map((post) => <Post key={post.id} post={post} />)}
+          </div>
 
-        {/* Posts */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {posts.map((post, i) => (
-            <motion.div
-              key={i}
-              custom={i}
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover={{ x: 2 }}
-              style={{
-                background: 'var(--bg-card)', border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-lg)', padding: '20px',
-                cursor: 'pointer', position: 'relative',
-                transition: 'border-color 0.2s ease'
-              }}
-            >
-              {post.pinned && (
-                <div style={{ position: 'absolute', top: '16px', right: '16px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.7rem', color: 'var(--accent-amber)' }}>
-                  <Pin size={11} /> Pinned
-                </div>
-              )}
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-                <div style={{
-                  width: '36px', height: '36px', borderRadius: '50%',
-                  background: 'linear-gradient(135deg, var(--brand), var(--accent-violet))',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '0.72rem', fontWeight: 700, color: '#fff', flexShrink: 0
-                }}>
-                  {post.avatar}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{post.author}</div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{post.role} · {post.time}</div>
-                </div>
-                <span className="badge" style={{ background: `${post.tagColor}15`, color: post.tagColor }}>
-                  {post.tag}
-                </span>
-              </div>
-
-              <h4 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '8px', lineHeight: 1.4 }}>{post.title}</h4>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '16px' }}>{post.body}</p>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '20px', borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
-                <button style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem' }}>
-                  <ThumbsUp size={14} /> {post.likes}
-                </button>
-                <button style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem' }}>
-                  <MessageSquare size={14} /> {post.comments}
-                </button>
-                <button style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.8rem' }}>
-                  <Heart size={14} /> Save
-                </button>
-              </div>
+          <div className="text-center py-4">
+            <div className="inline-flex items-center gap-2 text-xs text-muted-foreground bg-card border border-border rounded-full px-4 py-2">
+              <Shield size={11} /> Posts are moderated. Community is private to signed-up DHH users only.
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="space-y-3">
+          <p className="text-sm text-muted-foreground">Curated resources specifically for the DHH community, reviewed by DHH mental health advocates.</p>
+          {RESOURCES.map((r, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
+              <Card className="border-border/50 hover:border-border transition-colors duration-200">
+                <CardContent className="p-4 flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-teal-500/10 flex items-center justify-center flex-shrink-0"><Globe size={15} className="text-teal-400" /></div>
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">{r.name}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{r.desc}</p>
+                      </div>
+                      <Badge variant={r.category === "Crisis" ? "rose" : "teal"} className="flex-shrink-0">{r.category}</Badge>
+                    </div>
+                  </div>
+                  <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-violet-400 transition-colors mt-1">
+                    <ExternalLink size={14} />
+                  </a>
+                </CardContent>
+              </Card>
             </motion.div>
           ))}
         </div>
-      </div>
-
-      {/* Sidebar */}
-      <div style={{ width: '280px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Stats */}
-        <motion.div custom={0} variants={cardVariants} initial="hidden" animate="visible"
-          style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-          <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '16px' }}>Community Stats</h3>
-          {[
-            { label: 'Active Members', value: '4,200+', color: 'var(--brand)' },
-            { label: 'Weekly Posts', value: '280', color: 'var(--accent-teal)' },
-            { label: 'Peer Support Threads', value: '1,140', color: 'var(--accent-violet)' },
-          ].map((s, i) => (
-            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: i < 2 ? '1px solid var(--border)' : 'none', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{s.label}</span>
-              <span style={{ fontSize: '0.9rem', fontWeight: 700, color: s.color, fontFamily: 'Outfit, sans-serif' }}>{s.value}</span>
-            </div>
-          ))}
-        </motion.div>
-
-        {/* Resources */}
-        <motion.div custom={1} variants={cardVariants} initial="hidden" animate="visible"
-          style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
-          <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '14px' }}>DHH Resources</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {resources.map((r, i) => {
-              const Icon = r.icon;
-              return (
-                <div key={i} style={{
-                  display: 'flex', gap: '12px', padding: '12px', borderRadius: 'var(--radius-md)',
-                  background: 'var(--bg-surface)', border: '1px solid var(--border)',
-                  cursor: 'pointer', alignItems: 'center'
-                }}>
-                  <div style={{ flexShrink: 0, color: r.color }}><Icon size={16} /></div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: '0.8rem', fontWeight: 500, marginBottom: '2px' }}>{r.label}</p>
-                    <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{r.desc}</p>
-                  </div>
-                  <ChevronRight size={14} color="var(--text-muted)" />
-                </div>
-              );
-            })}
-          </div>
-        </motion.div>
-      </div>
+      )}
     </div>
   );
 };
