@@ -32,8 +32,7 @@ The goal is not to replace therapy. The goal is to lower friction for daily supp
 - Animations: Framer Motion
 - Icons: Lucide React
 - Local API: Express (Node.js)
-- Edge API option: Cloudflare Worker (Hono)
-- Data layer: JSON storage in local mode, KV storage in worker mode
+- Data layer: JSON storage for local development
 
 ## How To Use SignMind
 
