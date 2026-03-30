@@ -31,3 +31,4 @@ wrangler.toml
 server/wrangler.toml
 server/worker.js
 public/_redirects
+presentation-screenshots/
