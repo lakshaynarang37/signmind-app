@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-display: 'Sora', 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Sora", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 
   /* --- Base Obsidian Theme (Midnight) --- */
   --color-background: var(--bg);
@@ -37,61 +37,77 @@
 }
 
 :root {
-  /* Default: Obsidian Deep + Sage */
-  --bg: #0a0a0b;
-  --fg: #f1f1f1;
-  --fg-muted: #88888b;
-  --card: #141415;
-  --border: #242426;
-  --secondary: #1a1a1b;
-  --muted: #1c1c1e;
-  --accent: #252528;
-  --primary: #94d8c0; /* Sage Green */
-  --primary-glow: rgba(148, 216, 192, 0.2);
+  /* Default light palette: Paper + Mint */
+  --bg: #f8fbfa;
+  --fg: #132320;
+  --fg-muted: #5f726d;
+  --card: #ffffff;
+  --border: #d7e6e1;
+  --secondary: #edf6f3;
+  --muted: #f2f8f6;
+  --accent: #e6f1ed;
+  --primary: #0d7a63;
+  --primary-glow: rgba(13, 122, 99, 0.22);
+  --brand-start: #0d7a63;
+  --brand-end: #2f9ea6;
+  --surface-wash: #f4faf7;
 }
 
 [data-theme="emerald"] {
-  --bg: #070908;
-  --fg: #e2e8e5;
-  --fg-muted: #8a9690;
-  --card: #0f1412;
-  --border: #1a231f;
-  --secondary: #131a17;
-  --muted: #151e1a;
-  --accent: #1c2823;
-  --primary: #5eead4; /* Tealish Emerald */
-  --primary-glow: rgba(94, 234, 212, 0.2);
+  --bg: #f4fbf8;
+  --fg: #0f2920;
+  --fg-muted: #5f7c72;
+  --card: #ffffff;
+  --border: #cee4da;
+  --secondary: #e8f5ef;
+  --muted: #eff9f4;
+  --accent: #e1f2ea;
+  --primary: #0b8c6f;
+  --primary-glow: rgba(11, 140, 111, 0.22);
+  --brand-start: #0b8c6f;
+  --brand-end: #2ab49b;
+  --surface-wash: #edf9f3;
 }
 
 [data-theme="amber"] {
-  --bg: #0b0906;
-  --fg: #f4f1ed;
-  --fg-muted: #968e84;
-  --card: #15120d;
-  --border: #231e16;
-  --secondary: #1a1711;
-  --muted: #1e1a14;
-  --accent: #28231c;
-  --primary: #fcd34d; /* Amber Gold */
-  --primary-glow: rgba(252, 211, 77, 0.2);
+  --bg: #fff9f0;
+  --fg: #322112;
+  --fg-muted: #7c6446;
+  --card: #ffffff;
+  --border: #efd8b9;
+  --secondary: #fff1dd;
+  --muted: #fff6e8;
+  --accent: #ffeacf;
+  --primary: #c9801c;
+  --primary-glow: rgba(201, 128, 28, 0.22);
+  --brand-start: #c9801c;
+  --brand-end: #f2a93b;
+  --surface-wash: #fff3e1;
 }
 
 [data-theme="sunset"] {
-  --bg: #0d090a;
-  --fg: #f4efef;
-  --fg-muted: #9a8a8b;
-  --card: #181112;
-  --border: #2a1d1f;
-  --secondary: #221719;
-  --muted: #241a1c;
-  --accent: #322528;
-  --primary: #fda4af; /* Dusty Rose */
-  --primary-glow: rgba(253, 164, 175, 0.2);
+  --bg: #fff5f5;
+  --fg: #301f28;
+  --fg-muted: #7f6273;
+  --card: #ffffff;
+  --border: #eccfda;
+  --secondary: #fcebf1;
+  --muted: #fff1f5;
+  --accent: #f8e3eb;
+  --primary: #b95a78;
+  --primary-glow: rgba(185, 90, 120, 0.22);
+  --brand-start: #b95a78;
+  --brand-end: #dd7f93;
+  --surface-wash: #fdeef2;
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
 }
 
 * {
@@ -104,58 +120,109 @@ html {
 
 body {
   background-color: var(--bg);
+  background-image:
+    radial-gradient(
+      circle at 12% 0%,
+      color-mix(in srgb, var(--primary) 10%, transparent) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 92% 22%,
+      color-mix(in srgb, var(--brand-end) 13%, transparent) 0%,
+      transparent 40%
+    ),
+    linear-gradient(
+      180deg,
+      var(--surface-wash) 0%,
+      var(--bg) 50%,
+      var(--bg) 100%
+    );
   color: var(--fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--font-display);
   letter-spacing: -0.025em;
 }
 
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--fg-muted); }
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-muted);
+}
 
 /* --- Custom refined classes --- */
 
 .glass {
-  background: color-mix(in srgb, var(--card) 60%, transparent);
+  background: color-mix(in srgb, var(--card) 84%, transparent);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border);
+  border: 1px solid color-mix(in srgb, var(--border) 88%, white);
+  box-shadow: 0 6px 28px color-mix(in srgb, var(--primary) 7%, transparent);
 }
 
 .glass-strong {
-  background: color-mix(in srgb, var(--card) 80%, transparent);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--border);
+  border: 1px solid color-mix(in srgb, var(--border) 88%, white);
+  box-shadow: 0 10px 36px color-mix(in srgb, var(--primary) 9%, transparent);
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--fg), var(--primary));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--fg) 92%, black),
+    var(--brand-end)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.glow-primary { 
-  box-shadow: 0 0 32px var(--primary-glow); 
+.glow-primary {
+  box-shadow: 0 0 32px var(--primary-glow);
 }
 
 .shimmer-bg {
-  background: linear-gradient(90deg, var(--muted) 0%, var(--accent) 50%, var(--muted) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--muted) 0%,
+    var(--accent) 50%,
+    var(--muted) 100%
+  );
   background-size: 200% auto;
   animation: shimmer 2s linear infinite;
 }
 
 /* Cleanup old AI-style button/badge specific classes */
-.glow-violet, .glow-teal, .glow-rose, .glow-amber {
+.glow-violet,
+.glow-teal,
+.glow-rose,
+.glow-amber {
   box-shadow: none;
+}
+
+.focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 32%, white);
 }

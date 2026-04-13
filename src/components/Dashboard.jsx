@@ -16,7 +16,12 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { getDailyWellness, getMoodHistory } from "../services/backendApi";
+import {
+  getDailyWellness,
+  getMoodHistory,
+  getJournalEntries,
+  getLocalCounter,
+} from "../services/backendApi";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -70,7 +75,7 @@ const MoodBar = ({ day, value, color }) => (
           delay: 0.2,
           ease: [0.25, 0.46, 0.45, 0.94],
         }}
-        className="w-full max-w-[28px] rounded-t-md opacity-80"
+        className="w-full max-w-7 rounded-t-md opacity-80"
         style={{ background: color, minHeight: 3 }}
       />
     </div>
@@ -86,7 +91,7 @@ const QuickAction = ({ icon: Icon, label, desc, color, onClick, delay }) => (
     animate="visible"
   >
     <Card
-      className="border-border/50 cursor-pointer group hover:border-violet-500/30 transition-all duration-200 overflow-hidden"
+      className="border-border/70 cursor-pointer group hover:border-primary/40 transition-all duration-200 overflow-hidden"
       onClick={onClick}
     >
       <CardContent className="p-5">
@@ -111,6 +116,7 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
     weather: {},
   });
   const [moodData, setMoodData] = useState([]);
+  const [journalEntries, setJournalEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -118,16 +124,89 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
     Promise.all([
       getDailyWellness().catch(() => null),
       getMoodHistory(token).catch(() => null),
-    ]).then(([wellnessData, moodHistData]) => {
+      getJournalEntries(token).catch(() => null),
+    ]).then(([wellnessData, moodHistData, journalData]) => {
       if (!mounted) return;
       if (wellnessData) setWellness(wellnessData);
       if (moodHistData?.history) setMoodData(moodHistData.history);
+      if (journalData?.entries) setJournalEntries(journalData.entries);
       setLoading(false);
     });
     return () => {
       mounted = false;
     };
   }, [token]);
+
+  const getDayStreak = () => {
+    if (!journalEntries.length) return 0;
+    const uniqueDays = [
+      ...new Set(
+        journalEntries.map((entry) => new Date(entry.createdAt).toDateString()),
+      ),
+    ].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+
+    let streak = 0;
+    const cursor = new Date();
+    while (true) {
+      const day = cursor.toDateString();
+      if (!uniqueDays.includes(day)) break;
+      streak += 1;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    return streak;
+  };
+
+  const dayStreak = getDayStreak();
+  const avgMood = moodData.length
+    ? moodData.reduce((sum, row) => sum + row.score, 0) / moodData.length
+    : null;
+  const moodVariance = moodData.length
+    ? moodData.reduce((sum, row) => sum + Math.pow(row.score - avgMood, 2), 0) /
+      moodData.length
+    : null;
+  const moodStability =
+    moodVariance == null
+      ? "-"
+      : `${Math.max(0, Math.min(100, Math.round(100 - moodVariance * 12)))}%`;
+  const chatSessions = getLocalCounter("signmind_chat_sessions");
+  const recent3 = moodData.slice(-3);
+  const previous3 = moodData.slice(-6, -3);
+  const recentAvg = recent3.length
+    ? recent3.reduce((sum, row) => sum + row.score, 0) / recent3.length
+    : null;
+  const previousAvg = previous3.length
+    ? previous3.reduce((sum, row) => sum + row.score, 0) / previous3.length
+    : null;
+  const trendDelta =
+    recentAvg != null && previousAvg != null ? recentAvg - previousAvg : null;
+  const trendText =
+    trendDelta == null
+      ? "No trend yet"
+      : `${trendDelta >= 0 ? "+" : ""}${trendDelta.toFixed(1)} mood`;
+
+  const todayStr = new Date().toDateString();
+  const tasks = [
+    {
+      label: "Mood logged today",
+      done: moodData.some(
+        (row) => new Date(row.loggedAt).toDateString() === todayStr,
+      ),
+    },
+    {
+      label: "Journal entry today",
+      done: journalEntries.some(
+        (entry) => new Date(entry.createdAt).toDateString() === todayStr,
+      ),
+    },
+    {
+      label: "Support chat check-in",
+      done: chatSessions > 0,
+    },
+    {
+      label: "Community post",
+      done: false,
+    },
+  ];
 
   // Build 7-day mood chart
   const dayMoods = DAYS.map((day, i) => {
@@ -150,7 +229,7 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
     ];
     return {
       day,
-      value: avg ? (avg / 10) * 100 : Math.floor(Math.random() * 40 + 30),
+      value: avg ? (avg / 10) * 100 : 4,
       color: colors[i % 5],
     };
   });
@@ -169,10 +248,10 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
         initial="hidden"
         animate="visible"
       >
-        <div className="relative rounded-2xl border border-violet-500/20 bg-gradient-to-br from-card to-violet-950/20 p-6 lg:p-8 overflow-hidden">
+        <div className="relative rounded-2xl border border-border bg-[linear-gradient(135deg,var(--surface-wash),white_58%)] p-6 lg:p-8 overflow-hidden">
           {/* Blobs */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_0%,hsl(252_85%_68%/0.1),transparent_60%)] pointer-events-none" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_10%_100%,hsl(174_72%_47%/0.07),transparent_60%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_82%_0%,color-mix(in_srgb,var(--brand-end)_20%,transparent),transparent_60%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_10%_100%,color-mix(in_srgb,var(--brand-start)_16%,transparent),transparent_60%)] pointer-events-none" />
 
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center gap-6">
             <div className="flex-1">
@@ -188,7 +267,7 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
               </h2>
               <p className="text-muted-foreground text-sm leading-relaxed mb-5 max-w-lg">
                 {wellness.insight}{" "}
-                <span className="text-emerald-400 font-medium">
+                <span className="text-primary font-semibold">
                   {wellness.affirmation}
                 </span>
                 {wellness.weather?.temperatureC != null
@@ -220,24 +299,24 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard
           delay={1}
-          value="14"
+          value={String(dayStreak)}
           label="Day Streak"
           icon={Flame}
           color={{
-            bg: "bg-amber-500/10",
-            text: "text-amber-400",
-            glow: "bg-amber-400",
+            bg: "bg-amber-100",
+            text: "text-amber-700",
+            glow: "bg-amber-500",
           }}
         />
         <StatCard
           delay={2}
-          value="87%"
+          value={moodStability}
           label="Mood Stability"
           icon={Smile}
           color={{
-            bg: "bg-emerald-500/10",
-            text: "text-emerald-400",
-            glow: "bg-emerald-400",
+            bg: "bg-emerald-100",
+            text: "text-emerald-700",
+            glow: "bg-emerald-500",
           }}
         />
         <StatCard
@@ -246,20 +325,20 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
           label="Mood Logs"
           icon={Activity}
           color={{
-            bg: "bg-violet-500/10",
-            text: "text-violet-400",
-            glow: "bg-violet-400",
+            bg: "bg-sky-100",
+            text: "text-sky-700",
+            glow: "bg-sky-500",
           }}
         />
         <StatCard
           delay={4}
-          value="3"
+          value={String(chatSessions)}
           label="Chat Sessions"
           icon={Target}
           color={{
-            bg: "bg-teal-500/10",
-            text: "text-teal-400",
-            glow: "bg-teal-400",
+            bg: "bg-teal-100",
+            text: "text-teal-700",
+            glow: "bg-teal-500",
           }}
         />
       </div>
@@ -283,7 +362,7 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
                   </p>
                 </div>
                 <Badge variant="emerald">
-                  <TrendingUp size={10} /> +12%
+                  <TrendingUp size={10} /> {trendText}
                 </Badge>
               </div>
             </CardHeader>
@@ -311,34 +390,13 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
               <CardTitle className="text-base">Today's Plan</CardTitle>
             </CardHeader>
             <CardContent>
-              {[
-                {
-                  label: "Log morning mood",
-                  done: true,
-                  color: "text-violet-400",
-                },
-                {
-                  label: "5-min breathing exercise",
-                  done: false,
-                  color: "text-teal-400",
-                },
-                {
-                  label: "Journal entry",
-                  done: false,
-                  color: "text-amber-400",
-                },
-                {
-                  label: "Support check-in",
-                  done: false,
-                  color: "text-emerald-400",
-                },
-              ].map((task, i) => (
+              {tasks.map((task, i) => (
                 <div
                   key={i}
                   className={`flex items-center gap-3 py-2 ${i < 3 ? "border-b border-border/50" : ""}`}
                 >
                   <div
-                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${task.done ? "bg-violet-500 border-violet-500" : "border-border"}`}
+                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${task.done ? "bg-violet-500 border-violet-500" : "border-border"}`}
                   >
                     {task.done && (
                       <svg width="8" height="6" viewBox="0 0 10 8">
@@ -376,7 +434,7 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
             icon={BookOpen}
             label="Sign Journal"
             desc="Express your feelings through writing and mood tracking."
-            color={{ bg: "bg-violet-500/10", text: "text-violet-400" }}
+            color={{ bg: "bg-primary/10", text: "text-primary" }}
             onClick={() => setActiveTab("journal")}
           />
           <QuickAction
@@ -384,7 +442,7 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
             icon={Brain}
             label="Support Chat"
             desc="Talk through what you are feeling in a calm, private chat."
-            color={{ bg: "bg-indigo-500/10", text: "text-indigo-400" }}
+            color={{ bg: "bg-indigo-100", text: "text-indigo-700" }}
             onClick={() => setActiveTab("ai-companion")}
           />
           <QuickAction
@@ -392,7 +450,7 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
             icon={BarChart3}
             label="Mood Insights"
             desc="Get simple trend summaries from your mood history."
-            color={{ bg: "bg-teal-500/10", text: "text-teal-400" }}
+            color={{ bg: "bg-teal-100", text: "text-teal-700" }}
             onClick={() => setActiveTab("insights")}
           />
           <QuickAction
@@ -400,7 +458,7 @@ const Dashboard = ({ currentUser, setActiveTab, token }) => {
             icon={Users}
             label="DHH Community"
             desc="Connect with peers who understand your experience."
-            color={{ bg: "bg-amber-500/10", text: "text-amber-400" }}
+            color={{ bg: "bg-amber-100", text: "text-amber-700" }}
             onClick={() => setActiveTab("community")}
           />
         </div>

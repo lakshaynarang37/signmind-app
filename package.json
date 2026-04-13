@@ -9,10 +9,12 @@
     "dev:api": "node server/index.js",
     "dev:web": "vite",
     "build": "vite build",
+    "deploy:pages": "wrangler pages deploy dist --project-name signmind-wellness",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.34",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
@@ -23,6 +25,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toast": "^1.2.15",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@supabase/supabase-js": "^2.56.0",
     "@tailwindcss/vite": "^4.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

@@ -1,67 +1,67 @@
 # SignMind
 
-SignMind is a visual-first mental wellness app designed for Deaf and Hard-of-Hearing (DHH) users.
+SignMind is a visual-first wellness app built for Deaf and Hard-of-Hearing users. It prioritizes calm, clear, text-based support and practical emotional care without relying on audio-first patterns.
 
 Live app: https://signmind-wellness.pages.dev/
 
-Most mental health products are built around audio instructions and hearing-first assumptions. SignMind takes a different approach: clear visual interactions, text-first support, and accessibility choices that respect DHH communication preferences.
+## Core Experience
 
-## What This App Includes
+SignMind combines daily reflection, AI-assisted support, and community connection in one accessible flow:
 
-- Visual therapy modules with no audio dependency
-- Private journaling with mood tracking
-- Support chat for emotional check-ins and practical coping steps
-- Insight views based on recent mood logs
-- DHH-focused community and research sections
-- Crisis support modal with accessible contact options
+- Write and save private journal entries
+- Get AI-assisted mood analysis from journal text
+- Chat with a supportive companion for guided emotional check-ins
+- Track mood trends and simple progress patterns
+- Connect in a DHH-focused community space
+- Browse curated mental health and accessibility research
 
-## Why SignMind
+## Feature Highlights
 
-SignMind is built around everyday realities many DHH users describe:
+### 1. AI Mood Journal
 
-- communication fatigue
-- limited access to culturally-aware support
-- hearing-centric design in wellness apps
+- Private journaling with mood score, mood label, and tags
+- Auto mood estimation from entry text
+- Persistent history for reflection over time
 
-The goal is not to replace therapy. The goal is to lower friction for daily support and reflection.
+### 2. Support Chat
 
-## Tech Stack
+- Text-first, emotionally attuned AI companion
+- Session-based chat history per user
+- Crisis-aware responses with safe escalation behavior
 
-- Frontend: React + Vite
-- Styling: Utility-first CSS with reusable UI components
-- Animations: Framer Motion
-- Icons: Lucide React
-- Local API: Express (Node.js)
-- Data layer: JSON storage for local development
+### 3. Mood Insights
 
-## How To Use SignMind
+- Trend summaries from logged mood data
+- Streak and progress-style feedback for daily consistency
 
-1. Create an account and sign in.
-2. Start with a quick check-in in Support Chat.
-3. Use Visual Therapy when you feel overwhelmed or anxious.
-4. Write a short Sign Journal entry and log your mood.
-5. Revisit Insights to notice patterns over time.
+### 4. DHH Community
 
-## Main Spaces In The App
+- Shared peer posts for encouragement and lived experiences
+- Supportive, low-friction interaction model
 
-- Overview: daily check-in, quick actions, and mood summary
-- Sign Journal: private writing space with mood labels and tags
-- Support Chat: text-first emotional support and coping ideas
-- Insights: patterns from your recent mood logs
-- Community: shared experiences and supportive peer posts
-- Research Hub: curated mental health and accessibility references
+### 5. Research Hub
+
+- Rotating curated research feed
+- Focused on mental wellness and DHH accessibility
+
+### 6. Visual Grounding Tools
+
+- Built-in calming and regulation exercises
+- Practical, visual-first coping support
+
+## Accessibility and Safety
+
+- Designed for visual clarity and text-first interaction
+- Avoids audio-dependent guidance patterns
+- Includes crisis support entry points for urgent situations
+- Encourages professional help when higher-level care is needed
 
 ## Privacy
 
-- Journal entries and mood logs are private to your account.
-- SignMind is built to support reflection and wellness, not public sharing of personal notes.
+- User data is account-scoped
+- Journal and mood records are private to each user
+- Community is separated from private reflective data
 
-## Crisis Help
+## Product Goal
 
-If you feel unsafe or in immediate danger, use the in-app Crisis Support button right away and contact local emergency services.
-
-## Responsible Use
-
-SignMind provides supportive wellness guidance. It is not a substitute for licensed clinical care.
-
-If a user appears to be in immediate danger, direct them to local emergency or crisis services immediately.
+SignMind exists to make everyday emotional support more accessible, respectful, and culturally aligned for DHH users.

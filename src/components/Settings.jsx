@@ -23,27 +23,27 @@ import { updateProfile, updatePassword } from "../services/backendApi";
 const THEMES = [
   {
     id: "midnight",
-    name: "Midnight Obsidian",
-    color: "#94d8c0",
-    desc: "Sage & Deep Charcoal",
+    name: "Sage Canvas",
+    color: "#0d7a63",
+    desc: "Soft paper with mint contrast",
   },
   {
     id: "emerald",
-    name: "Emerald Glade",
-    color: "#5eead4",
-    desc: "Teal & Dark Forest",
+    name: "Emerald Daylight",
+    color: "#0b8c6f",
+    desc: "Fresh green and clear surfaces",
   },
   {
     id: "amber",
-    name: "Amber Harvest",
-    color: "#fcd34d",
-    desc: "Ochre & Warm Black",
+    name: "Amber Paper",
+    color: "#c9801c",
+    desc: "Warm editorial tones",
   },
   {
     id: "sunset",
-    name: "Dusty Sunset",
-    color: "#fda4af",
-    desc: "Rose & Earthy Dark",
+    name: "Rose Journal",
+    color: "#b95a78",
+    desc: "Gentle rose and cream",
   },
 ];
 
@@ -207,7 +207,7 @@ export default function Settings({
                 className="w-full flex items-center justify-between group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-2 rounded-xl bg-violet-500/10 text-violet-400">
+                  <div className="p-2 rounded-xl bg-primary/10 text-primary">
                     <User size={20} />
                   </div>
                   <div className="text-left">
@@ -317,7 +317,7 @@ export default function Settings({
                 className="w-full flex items-center justify-between group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-500">
+                  <div className="p-2 rounded-xl bg-amber-100 text-amber-700">
                     <Shield size={20} />
                   </div>
                   <div className="text-left">
@@ -390,7 +390,7 @@ export default function Settings({
       <div className="pt-4">
         <button
           onClick={onLogout}
-          className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 font-bold hover:bg-rose-500 hover:text-white transition-all group"
+          className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-rose-100 border border-rose-300 text-rose-700 font-bold hover:bg-rose-600 hover:text-white transition-all group"
         >
           <LogOut
             size={18}
