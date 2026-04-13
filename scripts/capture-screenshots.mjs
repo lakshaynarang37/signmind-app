@@ -18,10 +18,23 @@ async function captureDesktop(context) {
   await page.goto(BASE_URL, { waitUntil: "networkidle" });
 
   for (const item of pages) {
-    await page
-      .getByRole("button", { name: item.navLabel, exact: true })
-      .click();
-    await page.waitForTimeout(450);
+    // Try multiple selectors to find the navigation button
+    const button =
+      page.getByRole("button", { name: item.navLabel, exact: true }) ||
+      page.getByLabel(item.navLabel) ||
+      page.locator(`button:has-text("${item.navLabel}")`);
+
+    try {
+      await button.click({ timeout: 5000 });
+    } catch (e) {
+      console.log(
+        `Could not click ${item.navLabel}, trying alternative navigation...`,
+      );
+      // Try hash-based navigation if button click fails
+      await page.goto(`${BASE_URL}#/${item.key}`, { waitUntil: "networkidle" });
+    }
+
+    await page.waitForTimeout(800);
     const filePath = path.join(OUTPUT_DIR, `desktop-${item.key}.png`);
     await page.screenshot({ path: filePath, fullPage: true });
     console.log(`Saved ${filePath}`);
@@ -37,10 +50,23 @@ async function captureMobile(browser) {
   await page.goto(BASE_URL, { waitUntil: "networkidle" });
 
   for (const item of pages) {
-    await page
-      .getByRole("button", { name: item.navLabel, exact: true })
-      .click();
-    await page.waitForTimeout(450);
+    // Try multiple selectors to find the navigation button
+    const button =
+      page.getByRole("button", { name: item.navLabel, exact: true }) ||
+      page.getByLabel(item.navLabel) ||
+      page.locator(`button:has-text("${item.navLabel}")`);
+
+    try {
+      await button.click({ timeout: 5000 });
+    } catch (e) {
+      console.log(
+        `Could not click ${item.navLabel}, trying alternative navigation...`,
+      );
+      // Try hash-based navigation if button click fails
+      await page.goto(`${BASE_URL}#/${item.key}`, { waitUntil: "networkidle" });
+    }
+
+    await page.waitForTimeout(800);
     const filePath = path.join(OUTPUT_DIR, `mobile-${item.key}.png`);
     await page.screenshot({ path: filePath, fullPage: true });
     console.log(`Saved ${filePath}`);
